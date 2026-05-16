@@ -217,8 +217,12 @@ theorem q41_explicit (P : Params) :
       b_mod.val = 1 ∧ k_mod.val = 7 := by
     intro b_mod k_mod
     fin_cases b_mod <;> fin_cases k_mod <;> decide
-  -- Apply this to the residue pair
-  sorry -- Requires connecting Fin 8 to Nat.mod
+  -- Apply this to the residue pair by reducing Nat.mod to Fin
+  have h₁ : P.b % 8 < 8 := Nat.mod_lt _ (by decide)
+  have h₂ : P.k % 8 < 8 := Nat.mod_lt _ (by decide)
+  have := this ⟨P.b % 8, h₁⟩ ⟨P.k % 8, h₂⟩
+  simp [qDividesPrimeGate, core41, buildTable, congruenceHolds] at *
+  simp_all [Nat.mod_eq_of_lt]
 
 /-- Semistructured fringe table for q=47. ord_47(3) = 23. -/
 def fringe47 : QTable := buildTable 47 23
